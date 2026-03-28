@@ -1,0 +1,19 @@
+{
+  "name": "ws-backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev":"bun index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/node": "^25.5.0",
+    "@repo/typescript-config":"*"
+  }
+}
