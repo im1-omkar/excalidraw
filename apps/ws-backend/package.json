@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev":"bun index.ts"
+    "dev": "bun index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -13,7 +13,8 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@repo/typescript-config": "*",
     "@types/node": "^25.5.0",
-    "@repo/typescript-config":"*"
+    "ws": "^8.20.0"
   }
 }
