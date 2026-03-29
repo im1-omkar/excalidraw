@@ -13,8 +13,10 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@repo/backend-common":"*",
     "@repo/typescript-config": "*",
     "@types/node": "^25.5.0",
+    "@types/ws": "^8.18.1",
     "ws": "^8.20.0"
   }
 }

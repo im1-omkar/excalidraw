@@ -1,0 +1,21 @@
+{
+  "name": "@repo/backend-common",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/node": "^25.5.0"
+  },
+  "exports":{
+    "./variables":"./variables.ts",
+    "./db":"./db.ts",
+    "./model":"./model.ts"
+  }
+}

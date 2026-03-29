@@ -1,14 +1,31 @@
 import express from "express";
 import authRouter from "./src/modules/api.auth/routes.js";
 import roomRouter from "./src/modules/api.room/routes.js";
-import { json } from "node:stream/consumers";
+import connectDB from "@repo/backend-common/db"
+import User from "@repo/backend-common/model"
 
 const app = express();
+
+connectDB();
+
 
 app.use(express.json())
 
 app.use("/api/auth",authRouter);
 app.use("/api/room",roomRouter);
+
+app.get("/",async (req:express.Request, res:express.Response)=>{
+    const result = await User.create({
+        "userName":"omkar",
+        "email":"omkar23@gmail.com",
+        "password":"asdf1234!@#$"
+    })
+
+    res.json({
+        "success":"true",
+        "data":result
+    })
+})
 
 app.listen(3001,()=>{
     console.log("http-server is running on PORT : 3001");
