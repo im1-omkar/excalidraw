@@ -15,16 +15,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/room",roomRouter);
 
 app.get("/",async (req:express.Request, res:express.Response)=>{
-    const result = await User.create({
-        "userName":"omkar",
-        "email":"omkar23@gmail.com",
-        "password":"asdf1234!@#$"
-    })
-
-    res.json({
-        "success":"true",
-        "data":result
-    })
+    res.send("Hello from home route");
 })
 
 app.listen(3001,()=>{
