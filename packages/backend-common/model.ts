@@ -21,8 +21,7 @@ const Rooms = mongoose.model("Rooms", roomSchema);
 
 const messageSchema = new mongoose.Schema({
     roomId: {
-        type:Number,
-        unique:true
+        type:Number
     },
     message:String,
     createdAt: {

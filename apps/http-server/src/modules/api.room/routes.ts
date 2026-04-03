@@ -62,7 +62,6 @@ roomRouter.post("/create",authMiddleware,async (req:express.Request,res:express.
 
     
     //create a room {roomId:req.params.id, slag:req.body.slag}
-
     try{
         const result = await models.Rooms.create({
             "roomId":randomId,
