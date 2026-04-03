@@ -1,4 +1,4 @@
-import Users from "@repo/backend-common/model";
+import models from "@repo/backend-common/model";
 import express from "express";
 import jwt from "jsonwebtoken"
 
@@ -14,7 +14,7 @@ authRouter.post("/signup",async (req:express.Request, res:express.Response)=>{
     try{
         
         //check if the email already exists -> else send back error
-        const findUser = await Users.find({"email":email});
+        const findUser = await models.Users.find({"email":email});
 
         if(findUser.length != 0){
             console.log(findUser);
@@ -23,7 +23,7 @@ authRouter.post("/signup",async (req:express.Request, res:express.Response)=>{
         }
 
         //insert the email inside the DB -> else send back error
-        const enteredUser = await Users.create({"userName":userName,"email":email,"password":password});
+        const enteredUser = await models.Users.create({"userName":userName,"email":email,"password":password});
 
         //return the success-message
         res.json({
@@ -47,7 +47,7 @@ authRouter.post("/signin",async (req:express.Request, res:express.Response)=>{
     try{
         
         //search in DB with given email 
-        const search:any = await Users.findOne({"email":email});
+        const search:any = await models.Users.findOne({"email":email});
 
         if(search.length == 0){
             res.send("email don't exist");

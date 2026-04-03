@@ -17,7 +17,7 @@ const authMiddleware = async(req:express.Request, res:express.Response, next:exp
         (req.body as any).email = decoded.userName;
         
         //find the given email in the DB -> if it exists then good to go
-        if (decoded.email == "omkar@gmail.com"){
+        if (decoded.email){
             next();
             return;
         }

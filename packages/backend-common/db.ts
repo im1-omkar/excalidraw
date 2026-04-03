@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 
-console.log(process.env.DB_PASS!)
 
 const connectDB = async()=>{
     
