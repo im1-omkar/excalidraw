@@ -22,8 +22,11 @@
     "packages/*"
   ],
   "dependencies": {
+    "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.97",
+    "axios": "^1.14.0",
+    "cors": "^2.8.6",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.3"
   }
