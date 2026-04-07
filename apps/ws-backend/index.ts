@@ -15,19 +15,24 @@ wss.on("connection",async(ws, request:any)=>{
     ws.on("error",console.error)
 
     ws.on("message",async (message:RawData)=>{
-        //parse the message to json
-        const data = JSON.parse(message.toString());
+        //parse the message to json -> check for error while parsing
+        let data:any = null
+        try{
+             data = JSON.parse(message.toString());
+        }
+        catch(err){
+            ws.send("invalid message format");
+            return;
+        }
 
         /**there is vernability that we are taking roomId from the user itself -- which we should get ourself */
         
 
         if(data.type == "message"){
             const room = rooms[data.roomId]
-            console.log("1")
 
             //enter the data in database
             try{
-                console.log("2")
                 const result = await  models.Messages.create({
                     roomId:data.roomId,
                     message:data.message,
@@ -51,10 +56,10 @@ wss.on("connection",async(ws, request:any)=>{
     })
 
     try{
-        const headers = request.headers;
-        const token:any = headers["token"]
-        const decoded:any= jwt.verify(token,jwt_secret)
+       
+        const token:any = parsedUrl.query.token;
         const roomId:any = parsedUrl.query.roomId;
+        const decoded:any= jwt.verify(token,jwt_secret)
 
         ws.send(`Hello ${decoded.userName} from Server`)
 
