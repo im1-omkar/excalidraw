@@ -1,12 +1,15 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import DrawingBoard from './drawingTool'
 
 export default function Page() {
   const params = useParams()
   const id = params.id as string
   const num = parseInt(id)
+
+  const [socket, setSocket] = useState<WebSocket | null>(null)
 
   const isValid = !(isNaN(num) || num < 0 || num > 999)
 
@@ -15,24 +18,34 @@ export default function Page() {
 
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Ik9ta2FyMjM0MSIsImVtYWlsIjoib2phc2RmMjM0MjN3ZUBnbWFpbC5jb20iLCJpYXQiOjE3NzUxOTE0NjB9.Z72IPrhnyTqcVlL1qDfQxPrOmtEX1wp3UAlDlKM5u3U"
 
-    const socket = new WebSocket(
+    const ws = new WebSocket(
       `ws://localhost:8080?roomId=${num}&token=${token}`
     )
 
-    socket.onopen = () => {
+    setSocket(ws)
+
+    ws.onopen = () => {
       console.log("Socket connected")
     }
 
-    socket.onmessage = (event) => {
+    ws.onmessage = (event) => {
       console.log(event.data)
     }
 
-    return () => socket.close()
-  }, [isValid])
+    return () => {
+      ws.close()
+    }
+  }, [isValid, num])
 
   if (!isValid) {
     return <div>Invalid number</div>
   }
 
-  return <div>Page number {num}</div>
+  return (
+    <div className='h-screen w-screen'>
+      <div>Page number {num}</div>
+
+      {socket && <DrawingBoard socket={socket} roomId={num} />}
+    </div>
+  )
 }

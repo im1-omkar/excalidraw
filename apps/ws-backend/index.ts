@@ -18,6 +18,8 @@ wss.on("connection",async(ws, request:any)=>{
         //parse the message to json -> check for error while parsing
         let data:any = null
         try{
+             console.log(message.toString())
+             console.log(typeof(message))
              data = JSON.parse(message.toString());
         }
         catch(err){
@@ -32,21 +34,22 @@ wss.on("connection",async(ws, request:any)=>{
             const room = rooms[data.roomId]
 
             //enter the data in database
-            try{
-                const result = await  models.Messages.create({
-                    roomId:data.roomId,
-                    message:data.message,
-                    createdAt: new Date()
-                })
+            // try{
+            //     const result = await  models.Messages.create({
+            //         roomId:data.roomId,
+            //         message:data.message,
+            //         createdAt: new Date()
+            //     })
 
-                console.log(result);
-                console.log("3")
+            //     console.log(result);
+            //     console.log("3")
 
-            }catch(err){
-                console.log("error while entering messages in DB : " + err);
-            }
+            // }catch(err){
+            //     console.log("error while entering messages in DB : " + err);
+            // }
 
-            room.forEach((ws:WebSocket) =>{ ws.send(data.message)})
+            console.log("sent")
+            room.forEach((ws:WebSocket) =>{ ws.send(JSON.stringify(data));})
         }
 
     })
@@ -61,7 +64,9 @@ wss.on("connection",async(ws, request:any)=>{
         const roomId:any = parsedUrl.query.roomId;
         const decoded:any= jwt.verify(token,jwt_secret)
 
-        ws.send(`Hello ${decoded.userName} from Server`)
+        ws.send(JSON.stringify({
+            "message":`Hello ${decoded.userName} from Server`
+        }))
 
         if(rooms[String(roomId)] == null){
             rooms[String(roomId)] = []
@@ -69,7 +74,10 @@ wss.on("connection",async(ws, request:any)=>{
 
         rooms[String(roomId)].push(ws);
 
-        ws.send("you joined server : " + roomId);
+        ws.send(JSON.stringify({
+            "message":"you joined server",
+            "roomId":roomId
+        }));
 
         
         return;
