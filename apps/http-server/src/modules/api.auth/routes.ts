@@ -66,20 +66,28 @@ authRouter.post("/signin",async (req:express.Request, res:express.Response)=>{
         //if success -> generate a token -> return the token (token contains : email and username)
         const token = jwt.sign({"userName":search.userName,"email":email},JWT_SECRET)
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, 
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24 
+        })
+
         res.json({
             "successs":"true",
             "data":{
                 "userName":search.userName,
                 "email":search.email,
-                "token":token
             }
         })
 
     }
     catch(err){
-        res.send("error while signing-in: " + err);
-        return;
-    }
+       return res.status(500).json({
+            successs: "false",
+            message: "Error while signing-in"
+        })
+        }
 
 })
 
