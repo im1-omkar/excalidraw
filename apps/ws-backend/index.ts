@@ -18,8 +18,6 @@ wss.on("connection",async(ws, request:any)=>{
         //parse the message to json -> check for error while parsing
         let data:any = null
         try{
-             console.log(message.toString())
-             console.log(typeof(message))
              data = JSON.parse(message.toString());
         }
         catch(err){
@@ -48,7 +46,6 @@ wss.on("connection",async(ws, request:any)=>{
             //     console.log("error while entering messages in DB : " + err);
             // }
 
-            console.log("sent")
             room.forEach((ws:WebSocket) =>{ ws.send(JSON.stringify(data));})
         }
 

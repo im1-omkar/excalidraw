@@ -10,6 +10,7 @@ export default async function Home() {
   if(token){
     redirect('/dashboard')
   }
+  
 
   return (
       <div className="w-screen h-screen bg-linear-to-br from-gray-900 to-black text-white flex flex-col">
@@ -38,9 +39,11 @@ export default async function Home() {
               Sketch ideas, collaborate in real-time, and bring your thoughts to life visually.
             </p>
 
-            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition">
-              Start Drawing
-            </button>
+            <Link href='signin'>
+              <button  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition">
+                Start Drawing
+              </button>
+            </Link>
 
           </div>
         </div>

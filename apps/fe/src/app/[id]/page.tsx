@@ -43,7 +43,7 @@ export default function Page() {
 
   return (
     <div className='h-screen w-screen'>
-      <div>Page number {num}</div>
+      <div className='fixed top-0 right-0 p-2 m-2 bg-blue-400 rounded-3xl' >Room - {num}</div>
 
       {socket && <DrawingBoard socket={socket} roomId={num} />}
     </div>

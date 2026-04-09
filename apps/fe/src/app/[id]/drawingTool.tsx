@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react";
 
 type Tool = "line" | "rect" | "circle";
 
-type Shape =
-  | { type: "line"; start: { x: number; y: number }; end: { x: number; y: number } }
-  | { type: "rect"; start: { x: number; y: number }; end: { x: number; y: number } }
-  | { type: "circle"; start: { x: number; y: number }; end: { x: number; y: number } };
+type Shape = {
+  type: "line" | "rect" | "circle";
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  color: string;
+};
 
 export default function DrawingBoard({socket,  roomId,}: any) {
 
@@ -15,6 +17,7 @@ export default function DrawingBoard({socket,  roomId,}: any) {
 
   const [tool, setTool] = useState<Tool>("line");
   const [isDrawing, setIsDrawing] = useState(false);
+  const [color, setColor] = useState("white");
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
 
   const snapshotRef = useRef<ImageData | null>(null);
@@ -52,11 +55,22 @@ export default function DrawingBoard({socket,  roomId,}: any) {
     };
     }, [socket]);
 
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }, []);
+
     const drawFromSocket = (shape: Shape) => {
         const ctx = getCtx();
         if (!ctx) return;
 
         ctx.beginPath();
+
+        ctx.strokeStyle = shape.color; 
+        ctx.lineWidth = 2;
 
         if (shape.type === "line") {
             ctx.moveTo(shape.start.x, shape.start.y);
@@ -119,6 +133,9 @@ export default function DrawingBoard({socket,  roomId,}: any) {
 
     ctx.beginPath();
 
+    ctx.strokeStyle = color ;   // or any color
+    ctx.lineWidth = 2;
+
     let shape: Shape | null = null;
 
     if (tool === "line") {
@@ -155,15 +172,18 @@ export default function DrawingBoard({socket,  roomId,}: any) {
 
         ctx.beginPath();
 
+        ctx.strokeStyle = color;   // or any color
+        ctx.lineWidth = 2;
+
         if (tool === "line") {
             ctx.moveTo(start.x, start.y);
             ctx.lineTo(x, y);
-            shape = { type: "line", start, end: { x, y } };
+            shape = { type: "line", start, end: { x, y }, color };
         }
 
         if (tool === "rect") {
             ctx.rect(start.x, start.y, x - start.x, y - start.y);
-            shape = { type: "rect", start, end: { x, y } };
+            shape = { type: "rect", start, end: { x, y }, color };
         }
 
         if (tool === "circle") {
@@ -171,7 +191,7 @@ export default function DrawingBoard({socket,  roomId,}: any) {
             Math.pow(x - start.x, 2) + Math.pow(y - start.y, 2)
             );
             ctx.arc(start.x, start.y, radius, 0, Math.PI * 2);
-            shape = { type: "circle", start, end: { x, y } };
+            shape = { type: "circle", start, end: { x, y }, color };
         }
 
         ctx.stroke();
@@ -190,22 +210,29 @@ export default function DrawingBoard({socket,  roomId,}: any) {
     };
 
   return (
-    <div>
-      <div style={{ marginBottom: "10px" }}>
-        <button className="bg-red-400 m-5 rounded border p-2" onClick={() => setTool("line")}>Line</button>
-        <button className="bg-blue-400 m-5 rounded border p-2" onClick={() => setTool("rect")}>Rectangle</button>
-        <button className="bg-green-400 m-5 rounded border p-2" onClick={() => setTool("circle")}>Circle</button>
+    <div className="h-screen w-screen">
+      <div className="fixed top-0 left-0" style={{ marginBottom: "10px" }}>
+        <button className="bg-white m-5 rounded border p-2" onClick={() => setTool("line")}>Line</button>
+        <button className="bg-white m-5 rounded border p-2" onClick={() => setTool("rect")}>Rectangle</button>
+        <button className="bg-white m-5 rounded border p-2" onClick={() => setTool("circle")}>Circle</button>
+      
+        <div className="m-2">
+          <button onClick={()=>{setColor("white")}} className="h-5 w-5 bg-white m-2"></button>
+          <button onClick={()=>{setColor("green")}} className="h-5 w-5 bg-green-500 m-2"></button>
+          <button onClick={()=>{setColor("blue")}} className="h-5 w-5 bg-blue-500 m-2"></button>
+          <button onClick={()=>{setColor("red")}} className="h-5 w-5 bg-red-500 m-2"></button>
+        </div>
       </div>
 
       <canvas
         ref={canvasRef}
-        width={700}
-        height={400}
         style={{ border: "1px solid black" }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+
+        className="h-screen w-screen bg-black"
       />
     </div>
   );
